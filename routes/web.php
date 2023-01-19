@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CountyController;
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +14,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::redirect('/', 'counties');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rotas para cidades
+Route::resource('counties', CountyController::class);
+
+// Rotas para imoveis
+Route::resource('properties', PropertyController::class);
+
+
+
