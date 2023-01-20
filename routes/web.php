@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', 'counties');
 
 // Rotas para cidades
-Route::resource('counties', CountyController::class);
+Route::resource('counties', CountyController::class)->except(['show']);
 
 // Rotas para imoveis
 Route::resource('properties', PropertyController::class);
