@@ -5,7 +5,7 @@
         <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
             autofocus value="{{ old('name', $county->name ?? '') }}" />
         @error('name')
-            <div class="invalid-feedback">
+            <div class="red-text text-accent-3">
                 {{ $message }}
             </div>
         @enderror
