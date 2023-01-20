@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CountyRequest;
 use App\Models\County;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,13 @@ class CountyController extends Controller
      */
     public function index(County $counties)
     {
+        //cria um objeto com a query que será executada
+        $results = $counties::orderBy('name')->oldest();
 
-        return view('counties.index',['counties' => $counties]);
+        //chama a view passando a lista de cidades
+        return view('counties.index', [
+            'counties' =>  $results->paginate(self::$results_per_page)->withQueryString()
+        ]);
     }
 
     /**
@@ -25,7 +31,7 @@ class CountyController extends Controller
      */
     public function create()
     {
-        //
+        return view('counties.create');
     }
 
     /**
@@ -34,9 +40,13 @@ class CountyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(County $county, CountyRequest $request)
     {
-        //
+        $county::create( $request->all());
+
+        $request->session()->flash('success', "Cidade $request->name incluída com sucesso!");
+
+        return redirect('counties');
     }
 
     /**
@@ -47,7 +57,7 @@ class CountyController extends Controller
      */
     public function show(County $county)
     {
-        //
+
     }
 
     /**
@@ -58,7 +68,9 @@ class CountyController extends Controller
      */
     public function edit(County $county)
     {
-        //
+        return view('counties.edit', [
+            'county' => $county
+        ]);
     }
 
     /**
@@ -68,9 +80,13 @@ class CountyController extends Controller
      * @param  \App\Models\County  $county
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, County $county)
+    public function update(CountyRequest $request, County $county)
     {
-        //
+        $county->update($request->all());
+
+        $request->session()->flash('success', "Cidade $request->name editada com sucesso!");
+
+        return redirect('counties');
     }
 
     /**
@@ -79,8 +95,14 @@ class CountyController extends Controller
      * @param  \App\Models\County  $county
      * @return \Illuminate\Http\Response
      */
-    public function destroy(County $county)
+    public function destroy(County $county, Request $request)
     {
-        //
+        $county::destroy($county->id);
+
+        $aux = $county->name;
+
+        $request->session()->flash('success', "Cidade $aux excluída com sucesso!");
+
+        return redirect('counties');
     }
 }
